@@ -48,6 +48,8 @@ int main(int argc, char **argv)
 
     bool wasCharInLine = false;
 
+    string userInput = "";  //sets up user inut variable
+
     //Arrays are for wimps. Real coders use copy & paste
     unsigned int numAA = 0;
     unsigned int numAC = 0;
@@ -99,254 +101,266 @@ int main(int argc, char **argv)
     string line = "";                             //sets up string to read from file
 
 
-    // cout << "You have entered: " << endl;   //
+    //while is used to run program again and again
+    ifstream inputFile; //takes file form command line
+    
 
-    // for (int i = 1; i < argc; ++i)
-    // {
-    //     cout << argv[i] << endl;
-    // }
-
-    ifstream inputFile(argv[1]); //takes file form command line
-
-    if (!inputFile.is_open()) //makes sure file opens correctly
+    while (userInput != "quit")//(!(tolower(userInput) == "quit"))
     {
-        cout << "File didn't open properly" << endl;
-        return 1;
-    }
-
-    //1st run through file
-    while (inputFile.get(currentChar)) // loop getting single characters
-    {
-
-        currentChar = toupper(currentChar);
-
-        if (currentChar == 'A' || currentChar == 'C' || currentChar == 'T' || currentChar == 'G')
+        if (userInput == "")
         {
-            stringOfLetters += currentChar;
-            bigram += currentChar;
-            wasCharInLine = true;
+            inputFile.open(argv[1]);
+        } else
+        {
+            inputFile.open(userInput);
+        }
+        
+        
+
+        if (!inputFile.is_open()) //makes sure file opens correctly
+        {
+            cout << "File didn't open properly" << endl;
+            return 1;
         }
 
-        else
+        //1st run through file
+        while (inputFile.get(currentChar)) // loop getting single characters
         {
-            bigram = "";
-            bigram = "";
-            if (currentChar == '\n' && wasCharInLine == true) //This makes it so the program only counts lines with A,C, T, or G in them
+
+            currentChar = toupper(currentChar);
+
+            if (currentChar == 'A' || currentChar == 'C' || currentChar == 'T' || currentChar == 'G')
             {
-                wasCharInLine = false;
-                DNAlinesInDoc++;
+                stringOfLetters += currentChar;
+                bigram += currentChar;
+                wasCharInLine = true;
             }
-        }
 
-        if (bigram.length() == 2)
+            else
+            {
+                bigram = "";
+                bigram = "";
+                if (currentChar == '\n' && wasCharInLine == true) //This makes it so the program only counts lines with A,C, T, or G in them
+                {
+                    wasCharInLine = false;
+                    DNAlinesInDoc++;
+                }
+            }
+
+            if (bigram.length() == 2)
+            {
+                stringOfBigrams += bigram;
+                bigram = "";
+            }
+
+            previousChar = currentChar;
+
+        } //while
+
+        //closes and opens file to reset position
+        inputFile.close();
+        ifstream anotherInputFile(argv[1]);
+
+        //calculate mean DNA per line
+
+        meanDnaPerLine = (stringOfLetters.length() / (double)DNAlinesInDoc);
+
+        //2nd run through file
+        while (anotherInputFile.get(currentChar)) // loop getting single characters
         {
-            stringOfBigrams += bigram;
-            bigram = "";
-        }
+            currentChar = toupper(currentChar);
+            if (currentChar == 'A' || currentChar == 'C' || currentChar == 'T' || currentChar == 'G')
+            {
+                DNAstringLength++;
+                // cout << currentChar << endl;
 
-        previousChar = currentChar;
+            } //if
 
-    } //while
+            else if (currentChar == '\n')
+            {
+                varianceNumerator += pow((DNAstringLength - meanDnaPerLine), 2);
 
-    //closes and opens file to reset position
-    inputFile.close();
-    ifstream anotherInputFile(argv[1]);
+                // cout << "Variance calculation" << endl;
 
-    //calculate mean DNA per line
+                // cout << pow((DNAstringLength - meanDnaPerLine), 2) << endl;
 
-    meanDnaPerLine = (stringOfLetters.length() / (double)DNAlinesInDoc);
+                DNAstringLength = 0;
+            } //else  if
 
-    //2nd run through file
-    while (anotherInputFile.get(currentChar)) // loop getting single characters
-    {
-        currentChar = toupper(currentChar);
-        if (currentChar == 'A' || currentChar == 'C' || currentChar == 'T' || currentChar == 'G')
+        } //while
+
+        //Calculate variance
+        variance = (varianceNumerator / (DNAlinesInDoc));
+
+        //prints entire file
+
+        //cout << endl << stringOfLetters << endl << stringOfBigrams << endl;
+
+        ofstream outputFile(OUTPUT_FILE); //Creates output file
+
+        //Counts number of each individual letter
+
+        cout << "Counting letters" << endl;
+        for (int i = 0; i < stringOfLetters.length(); ++i) //works
         {
-            DNAstringLength++;
-            // cout << currentChar << endl;
+            if (stringOfLetters.substr(i, 1) == "A")
+                numA++;
+            if (stringOfLetters.substr(i, 1) == "C")
+                numC++;
+            if (stringOfLetters.substr(i, 1) == "T")
+                numT++;
+            if (stringOfLetters.substr(i, 1) == "G")
+                numG++;
+        } //for
 
-        } //if
+        //Counts number of each bigram
 
-        else if (currentChar == '\n')
+        cout << "Counting bigrams." << endl;
+        for (int i = 0; i < stringOfBigrams.length(); ++++i)
         {
-            varianceNumerator += pow((DNAstringLength - meanDnaPerLine), 2);
+            if (stringOfBigrams.substr(i, 2) == "AA")
+                numAA++;
+            if (stringOfBigrams.substr(i, 2) == "AC")
+                numAC++;
+            if (stringOfBigrams.substr(i, 2) == "AT")
+                numAT++;
+            if (stringOfBigrams.substr(i, 2) == "AG")
+                numAG++;
+            if (stringOfBigrams.substr(i, 2) == "CA")
+                numCA++;
+            if (stringOfBigrams.substr(i, 2) == "CC")
+                numCC++;
+            if (stringOfBigrams.substr(i, 2) == "CT")
+                numCT++;
+            if (stringOfBigrams.substr(i, 2) == "CG")
+                numCG++;
+            if (stringOfBigrams.substr(i, 2) == "TA")
+                numTA++;
+            if (stringOfBigrams.substr(i, 2) == "TC")
+                numTC++;
+            if (stringOfBigrams.substr(i, 2) == "TT")
+                numTT++;
+            if (stringOfBigrams.substr(i, 2) == "TG")
+                numTG++;
+            if (stringOfBigrams.substr(i, 2) == "GA")
+                numGA++;
+            if (stringOfBigrams.substr(i, 2) == "GC")
+                numGC++;
+            if (stringOfBigrams.substr(i, 2) == "GT")
+                numGT++;
+            if (stringOfBigrams.substr(i, 2) == "GG")
+                numGG++;
+        } //for
 
-            // cout << "Variance calculation" << endl;
+        //Calculates probability of each combination
 
-            // cout << pow((DNAstringLength - meanDnaPerLine), 2) << endl;
+        //Gets total number of DNA letters and DNA bigrams
 
-            DNAstringLength = 0;
-        } //else  if
+        totalDNA = stringOfLetters.length();
+        totalBigrams = (stringOfBigrams.length() / 2);
 
-    } //while
+        //Calculates actual probability
 
-    //Calculate variance
-    variance = (varianceNumerator / (DNAlinesInDoc));
+        probA = (numA / ((double)totalDNA));
+        probC = (numC / ((double)totalDNA));
+        probT = (numT / ((double)totalDNA));
+        probG = (numG / ((double)totalDNA));
 
-    //prints entire file
+        //Calculates bigram probability
+        probAA = (numAA / ((double)totalBigrams));
+        probAC = (numAC / ((double)totalBigrams));
+        probAT = (numAT / ((double)totalBigrams));
+        probAG = (numAG / ((double)totalBigrams));
+        probCA = (numCA / ((double)totalBigrams));
+        probCC = (numCC / ((double)totalBigrams));
+        probCT = (numCT / ((double)totalBigrams));
+        probCG = (numCG / ((double)totalBigrams));
+        probTA = (numTA / ((double)totalBigrams));
+        probTC = (numTC / ((double)totalBigrams));
+        probTT = (numTT / ((double)totalBigrams));
+        probTG = (numTG / ((double)totalBigrams));
+        probGA = (numGA / ((double)totalBigrams));
+        probGC = (numGC / ((double)totalBigrams));
+        probGT = (numGT / ((double)totalBigrams));
+        probGG = (numGG / ((double)totalBigrams));
 
-    //cout << endl << stringOfLetters << endl << stringOfBigrams << endl;
+        //Hard coding is best coding
+        cout << "Lucas Torti" << endl
+            << endl;
 
-    ofstream outputFile(OUTPUT_FILE); //Creates output file
+        cout << "Number of A: " << numA << endl;
+        cout << "Number of C: " << numC << endl;
+        cout << "Number of T: " << numT << endl;
+        cout << "Number of G: " << numG << endl
+            << endl;
 
-    //Counts number of each individual letter
+        cout << "AA combinations: " << numAA << endl;
+        cout << "AC combinations: " << numAC << endl;
+        cout << "AT combinations: " << numAT << endl;
+        cout << "AG combinations: " << numAG << endl;
+        cout << "CA combinations: " << numCA << endl;
+        cout << "CC combinations: " << numCC << endl;
+        cout << "CT combinations: " << numCT << endl;
+        cout << "CG combinations: " << numCG << endl;
+        cout << "TA combinations: " << numTA << endl;
+        cout << "TC combinations: " << numTC << endl;
+        cout << "TT combinations: " << numTT << endl;
+        cout << "TG combinations: " << numTG << endl;
+        cout << "GA combinations: " << numGA << endl;
+        cout << "GC combinations: " << numGC << endl;
+        cout << "GT combinations: " << numGT << endl;
+        cout << "GG combinations: " << numGG << endl
+            << endl;
 
-    cout << "Counting letters" << endl;
-    for (int i = 0; i < stringOfLetters.length(); ++i) //works
-    {
-        if (stringOfLetters.substr(i, 1) == "A")
-            numA++;
-        if (stringOfLetters.substr(i, 1) == "C")
-            numC++;
-        if (stringOfLetters.substr(i, 1) == "T")
-            numT++;
-        if (stringOfLetters.substr(i, 1) == "G")
-            numG++;
-    } //for
+        cout << "Probability of A: " << probA << endl;
+        cout << "Probability of C: " << probC << endl;
+        cout << "Probability of T: " << probT << endl;
+        cout << "Probability of G: " << probG << endl
+            << endl;
 
-    //Counts number of each bigram
+        cout << "Probability of AA: " << probAA << endl;
+        cout << "Probability of AC: " << probAC << endl;
+        cout << "Probability of AT: " << probAT << endl;
+        cout << "Probability of AG: " << probAG << endl;
+        cout << "Probability of CA: " << probCA << endl;
+        cout << "Probability of CC: " << probCC << endl;
+        cout << "Probability of CT: " << probCT << endl;
+        cout << "Probability of CG: " << probCG << endl;
+        cout << "Probability of TA: " << probTA << endl;
+        cout << "Probability of TC: " << probTC << endl;
+        cout << "Probability of TT: " << probTT << endl;
+        cout << "Probability of TG: " << probTG << endl;
+        cout << "Probability of GA: " << probGA << endl;
+        cout << "Probability of GC: " << probGC << endl;
+        cout << "Probability of GT: " << probGT << endl;
+        cout << "Probability of GG: " << probGG << endl
+            << endl;
 
-    cout << "Counting bigrams." << endl;
-    for (int i = 0; i < stringOfBigrams.length(); ++++i)
-    {
-        if (stringOfBigrams.substr(i, 2) == "AA")
-            numAA++;
-        if (stringOfBigrams.substr(i, 2) == "AC")
-            numAC++;
-        if (stringOfBigrams.substr(i, 2) == "AT")
-            numAT++;
-        if (stringOfBigrams.substr(i, 2) == "AG")
-            numAG++;
-        if (stringOfBigrams.substr(i, 2) == "CA")
-            numCA++;
-        if (stringOfBigrams.substr(i, 2) == "CC")
-            numCC++;
-        if (stringOfBigrams.substr(i, 2) == "CT")
-            numCT++;
-        if (stringOfBigrams.substr(i, 2) == "CG")
-            numCG++;
-        if (stringOfBigrams.substr(i, 2) == "TA")
-            numTA++;
-        if (stringOfBigrams.substr(i, 2) == "TC")
-            numTC++;
-        if (stringOfBigrams.substr(i, 2) == "TT")
-            numTT++;
-        if (stringOfBigrams.substr(i, 2) == "TG")
-            numTG++;
-        if (stringOfBigrams.substr(i, 2) == "GA")
-            numGA++;
-        if (stringOfBigrams.substr(i, 2) == "GC")
-            numGC++;
-        if (stringOfBigrams.substr(i, 2) == "GT")
-            numGT++;
-        if (stringOfBigrams.substr(i, 2) == "GG")
-            numGG++;
-    } //for
-
-    //Calculates probability of each combination
-
-    //Gets total number of DNA letters and DNA bigrams
-
-    totalDNA = stringOfLetters.length();
-    totalBigrams = (stringOfBigrams.length() / 2);
-
-    //Calculates actual probability
-
-    probA = (numA / ((double)totalDNA));
-    probC = (numC / ((double)totalDNA));
-    probT = (numT / ((double)totalDNA));
-    probG = (numG / ((double)totalDNA));
-
-    //Calculates bigram probability
-    probAA = (numAA / ((double)totalBigrams));
-    probAC = (numAC / ((double)totalBigrams));
-    probAT = (numAT / ((double)totalBigrams));
-    probAG = (numAG / ((double)totalBigrams));
-    probCA = (numCA / ((double)totalBigrams));
-    probCC = (numCC / ((double)totalBigrams));
-    probCT = (numCT / ((double)totalBigrams));
-    probCG = (numCG / ((double)totalBigrams));
-    probTA = (numTA / ((double)totalBigrams));
-    probTC = (numTC / ((double)totalBigrams));
-    probTT = (numTT / ((double)totalBigrams));
-    probTG = (numTG / ((double)totalBigrams));
-    probGA = (numGA / ((double)totalBigrams));
-    probGC = (numGC / ((double)totalBigrams));
-    probGT = (numGT / ((double)totalBigrams));
-    probGG = (numGG / ((double)totalBigrams));
-
-    //Hard coding is best coding
-    cout << "Lucas Torti" << endl
-         << endl;
-
-    cout << "Number of A: " << numA << endl;
-    cout << "Number of C: " << numC << endl;
-    cout << "Number of T: " << numT << endl;
-    cout << "Number of G: " << numG << endl
-         << endl;
-
-    cout << "AA combinations: " << numAA << endl;
-    cout << "AC combinations: " << numAC << endl;
-    cout << "AT combinations: " << numAT << endl;
-    cout << "AG combinations: " << numAG << endl;
-    cout << "CA combinations: " << numCA << endl;
-    cout << "CC combinations: " << numCC << endl;
-    cout << "CT combinations: " << numCT << endl;
-    cout << "CG combinations: " << numCG << endl;
-    cout << "TA combinations: " << numTA << endl;
-    cout << "TC combinations: " << numTC << endl;
-    cout << "TT combinations: " << numTT << endl;
-    cout << "TG combinations: " << numTG << endl;
-    cout << "GA combinations: " << numGA << endl;
-    cout << "GC combinations: " << numGC << endl;
-    cout << "GT combinations: " << numGT << endl;
-    cout << "GG combinations: " << numGG << endl
-         << endl;
-
-    cout << "Probability of A: " << probA << endl;
-    cout << "Probability of C: " << probC << endl;
-    cout << "Probability of T: " << probT << endl;
-    cout << "Probability of G: " << probG << endl
-         << endl;
-
-    cout << "Probability of AA: " << probAA << endl;
-    cout << "Probability of AC: " << probAC << endl;
-    cout << "Probability of AT: " << probAT << endl;
-    cout << "Probability of AG: " << probAG << endl;
-    cout << "Probability of CA: " << probCA << endl;
-    cout << "Probability of CC: " << probCC << endl;
-    cout << "Probability of CT: " << probCT << endl;
-    cout << "Probability of CG: " << probCG << endl;
-    cout << "Probability of TA: " << probTA << endl;
-    cout << "Probability of TC: " << probTC << endl;
-    cout << "Probability of TT: " << probTT << endl;
-    cout << "Probability of TG: " << probTG << endl;
-    cout << "Probability of GA: " << probGA << endl;
-    cout << "Probability of GC: " << probGC << endl;
-    cout << "Probability of GT: " << probGT << endl;
-    cout << "Probability of GG: " << probGG << endl
-         << endl;
-
-    cout << endl
-         << "Sum of DNA length: " << stringOfLetters.length() << endl;
-    cout << "Lines containing DNA: " << DNAlinesInDoc << endl;
-    cout << "Mean DNA per line: " << meanDnaPerLine << endl;
-    cout << "Variance: " << variance << endl
-         << endl;
+        cout << endl
+            << "Sum of DNA length: " << stringOfLetters.length() << endl;
+        cout << "Lines containing DNA: " << DNAlinesInDoc << endl;
+        cout << "Mean DNA per line: " << meanDnaPerLine << endl;
+        cout << "Variance: " << variance << endl
+            << endl;
 
 
-    //cout << "Random value: " << selectedOutput << endl;
-    cout << "Writing to file..." << endl;
-    for (int i = 0; i < NUM_LINES_TO_PRINT; ++i)
-    {
-        outputFile << getDnaString(variance, meanDnaPerLine, probA, probC, probT, probG,
-                                   probAA, probAC, probAT, probAG, probCA, probCC, probCT, probCG,
-                                   probTA, probTC, probTT, probTG, probGA, probGC, probGT, probGG)
-                   << endl;
-    } //for
+        //cout << "Random value: " << selectedOutput << endl;
+        cout << "Writing to file..." << endl;
+        for (int i = 0; i < NUM_LINES_TO_PRINT; ++i)
+        {
+            outputFile << getDnaString(variance, meanDnaPerLine, probA, probC, probT, probG,
+                                    probAA, probAC, probAT, probAG, probCA, probCC, probCT, probCG,
+                                    probTA, probTC, probTT, probTG, probGA, probGC, probGT, probGG)
+                    << endl;
+        } //for
 
-    cout << "Closing file." << endl;
-    outputFile.close();
+        cout << "Closing file." << endl;
+        outputFile.close();
+
+        cout << endl << "Enter another file to repeat the process, or type 'quit' to stop program: ";
+
+        cin >> userInput;
+    }      //while
 
     return 0;
 } //main
@@ -488,26 +502,30 @@ string getSingleDna(double probA, double probC, double probT, double probG)
 {
     double x = ((double)rand() / (RAND_MAX)); //makes random number from 0.0 to 1.0
     //cout << x << endl;
+    int probabilityIndex = 0;
     double selectedProb = probA;
     string selectedOutput = "A";
     while (selectedProb < x)
     {
-        if (selectedProb == probA)
+        if (probabilityIndex == 0)
         {
             selectedProb += probC;
             selectedOutput = "C";
+            probabilityIndex++;
         }
-        else if (selectedProb == (probA + probC))
+        else if (probabilityIndex == 1)
         {
             selectedProb += probT;
             selectedOutput = "T";
+            probabilityIndex++;
         }
-        else if (selectedProb == (probA + probC + probT))
+        else if (probabilityIndex == 2)
         {
             selectedProb += probG;
             selectedOutput = "G";
+            probabilityIndex++;
         }
-        else if (selectedProb == (probA + probC + probT + probG))
+        else if (probabilityIndex == 3)
         {
             cout << endl
                  << "There was a problem" << endl;
