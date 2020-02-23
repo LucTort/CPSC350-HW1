@@ -1,0 +1,5 @@
+Hello 
+Cats are cool
+But they don't go to school
+If you want a yes / no answer you need a bool
+That's what makes programming so cool
