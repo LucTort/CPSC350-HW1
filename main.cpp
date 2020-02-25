@@ -1,3 +1,11 @@
+// a. Lucas Torti
+// b. 2351555
+// c. torti@chapman.edu
+// d. CPSC 350-01
+// e. Assignment 1
+
+// The entirety of program one. Reads in input from file, then outputs similar style DNA sequences to lucasTorti.out
+
 //https://www.geeksforgeeks.org/command-line-arguments-in-c-cpp/
 //http://www.cplusplus.com/doc/tutorial/files/
 //https://stackoverflow.com/questions/46719183/c-using-ifstream-to-read-file
@@ -6,6 +14,9 @@
 //https://stackoverflow.com/questions/7748071/same-random-numbers-every-time-i-run-the-program
 //https://stackoverflow.com/questions/1727881/how-to-use-the-pi-constant-in-c
 //http://www.cplusplus.com/reference/cmath/log/
+
+
+
 
 #include <iostream>
 #include <fstream> //Needed to work with files
@@ -23,13 +34,23 @@ string getDnaString(double variance, double meanDnaLength, double probA, double 
                     double probAA, double probAC, double probAT, double probAG, double probCA, double probCC, double probCT, double probCG,
                     double probTA, double probTC, double probTT, double probTG, double probGA, double probGC, double probGT, double probGG);
 
+string printMyInfo();
+
 int main(int argc, char **argv)
 {
 
     srand(time(NULL)); //seeds random output
 
+    //  _    __           _       __    __         
+   //  | |  / /___ ______(_)___ _/ /_  / /__  _____    //
+  //   | | / / __ `/ ___/ / __ `/ __ \/ / _ \/ ___/   //
+ //    | |/ / /_/ / /  / / /_/ / /_/ / /  __(__  )   //
+//     |___/\__,_/_/  /_/\__,_/_.___/_/\___/____/   //
+
     const string OUTPUT_FILE = "lucasTorti.out"; //sets name for output file
     const int NUM_LINES_TO_PRINT = 1000;         //number of lines to output to file
+
+    int timesRun = 0;
 
     string stringOfLetters = "";
     string stringOfBigrams = "";
@@ -40,9 +61,9 @@ int main(int argc, char **argv)
     char currentChar = ' ';
     char previousChar = ' ';
     string bigram = "";
+
     int DNAstringLength = 0;
     double varianceNumerator = 0;
-
     double meanDnaPerLine = 0;
     double variance = 0;
 
@@ -98,15 +119,91 @@ int main(int argc, char **argv)
     unsigned int totalDNA = 0;
     unsigned int totalBigrams = 0;
 
-    string line = "";                             //sets up string to read from file
+    string line = "";          
 
 
-    //while is used to run program again and again
+
+     // __  ___      _          ____                                      
+    // /  |/  /___ _(_)___     / __ \_________  ____ __________ _____ ___     //
+   // / /|_/ / __ `/ / __ \   / /_/ / ___/ __ \/ __ `/ ___/ __ `/ __ `__ \   //
+  // / /  / / /_/ / / / / /  / ____/ /  / /_/ / /_/ / /  / /_/ / / / / / /  //
+ // /_/  /_/\__,_/_/_/ /_/  /_/   /_/   \____/\__, /_/   \__,_/_/ /_/ /_/  //
+//                                          /____/                        //
+
+
+    //Open files for later use in program    
     ifstream inputFile; //takes file form command line
+    ofstream outputFile(OUTPUT_FILE); //Creates output file
     
 
+    //while is used to run program again and again
     while (userInput != "quit")//(!(tolower(userInput) == "quit"))
     {
+
+        //reset variables from previous use
+
+     stringOfLetters = "";
+     stringOfBigrams = "";
+
+     DNAlinesInDoc = 0;
+     DNAstringLength = 0;
+     varianceNumerator = 0;
+     meanDnaPerLine = 0;
+     variance = 0;
+
+     wasCharInLine = false;
+
+      numAA = 0;
+      numAC = 0;
+      numAT = 0;
+      numAG = 0;
+      numCA = 0;
+      numCC = 0;
+     numCT = 0;
+     numCG = 0;
+     numTA = 0;
+     numTC = 0;
+     numTT = 0;
+     numTG = 0;
+     numGA = 0;
+     numGC = 0;
+     numGT = 0;
+     numGG = 0;
+
+      numA = 0;
+      numC = 0;
+      numT = 0;
+      numG = 0;
+
+     probAA = 0;
+     probAC = 0;
+     probAT = 0;
+     probAG = 0;
+     probCA = 0;
+     probCC = 0;
+     probCT = 0;
+     probCG = 0;
+     probTA = 0;
+     probTC = 0;
+     probTT = 0;
+     probTG = 0;
+     probGA = 0;
+     probGC = 0;
+     probGT = 0;
+     probGG = 0;
+
+     probA = 0;
+     probC = 0;
+     probT = 0;
+     probG = 0;
+
+    totalDNA = 0;
+    totalBigrams = 0;
+
+
+
+
+
         if (userInput == "")
         {
             inputFile.open(argv[1]);
@@ -123,6 +220,7 @@ int main(int argc, char **argv)
             return 1;
         }
 
+        
         //1st run through file
         while (inputFile.get(currentChar)) // loop getting single characters
         {
@@ -196,7 +294,7 @@ int main(int argc, char **argv)
 
         //cout << endl << stringOfLetters << endl << stringOfBigrams << endl;
 
-        ofstream outputFile(OUTPUT_FILE); //Creates output file
+
 
         //Counts number of each individual letter
 
@@ -284,9 +382,9 @@ int main(int argc, char **argv)
         probGT = (numGT / ((double)totalBigrams));
         probGG = (numGG / ((double)totalBigrams));
 
-        //Hard coding is best coding
-        cout << "Lucas Torti" << endl
-            << endl;
+
+        //outputs calculated data
+
 
         cout << "Number of A: " << numA << endl;
         cout << "Number of C: " << numC << endl;
@@ -336,14 +434,21 @@ int main(int argc, char **argv)
         cout << "Probability of GG: " << probGG << endl
             << endl;
 
-        cout << endl
-            << "Sum of DNA length: " << stringOfLetters.length() << endl;
+        cout << endl << "Sum of DNA length: " << stringOfLetters.length() << endl;
         cout << "Lines containing DNA: " << DNAlinesInDoc << endl;
         cout << "Mean DNA per line: " << meanDnaPerLine << endl;
-        cout << "Variance: " << variance << endl
-            << endl;
+        cout << "Variance: " << variance << endl << endl;
 
 
+
+
+        //Print to file
+
+
+        if(timesRun == 0)
+        {
+            outputFile << printMyInfo();
+        }
         //cout << "Random value: " << selectedOutput << endl;
         cout << "Writing to file..." << endl;
         for (int i = 0; i < NUM_LINES_TO_PRINT; ++i)
@@ -354,16 +459,30 @@ int main(int argc, char **argv)
                     << endl;
         } //for
 
-        cout << "Closing file." << endl;
-        outputFile.close();
+        
 
         cout << endl << "Enter another file to repeat the process, or type 'quit' to stop program: ";
 
         cin >> userInput;
+
+        timesRun++;
     }      //while
+
+    cout << "Closing file." << endl;
+    outputFile.close();
 
     return 0;
 } //main
+
+
+
+    // ______                 __  _                     //
+   // / ____/_  ______  _____/ /_(_)___  ____  _____   //
+  // / /_  / / / / __ \/ ___/ __/ / __ \/ __ \/ ___/  //
+ // / __/ / /_/ / / / / /__/ /_/ / /_/ / / / (__  )  //
+// /_/    \__,_/_/ /_/\___/\__/_/\____/_/ /_/____/  //
+
+
 
 //Generate Gaussian distribution number
 int getGaussianNum(double variance, double meanDnaPerLine)
@@ -372,11 +491,16 @@ int getGaussianNum(double variance, double meanDnaPerLine)
     double a = ((double)rand() / (RAND_MAX));
     double b = ((double)rand() / (RAND_MAX));
 
-    double C = sqrt(-2 * log(a)) * cos(2 * M_PI);
+    double C = sqrt(-2 * log(a)) * cos(2 * M_PI * b);
 
     double D = ( (sqrt(variance) * C) + meanDnaPerLine );
 
+    if (D < 0) 
+        D = 0;
+
     return D;
+
+
 
 } //getGaussianNum()
 
@@ -393,7 +517,7 @@ string getBigram(double probAA, double probAC, double probAT, double probAG, dou
     string bigramOutput = "AA";
     while (selectedProb < x)
     {
-        //out << "In while" << endl;
+
         if (probabilityIndex == 0)
         {
             selectedProb += probAC;
@@ -491,7 +615,6 @@ string getBigram(double probAA, double probAC, double probAT, double probAG, dou
         }
     } //while
 
-
     return bigramOutput;
 
 } //getBigram
@@ -539,7 +662,6 @@ string getDnaString(double variance, double meanDnaLength, double probA, double 
                     double probTA, double probTC, double probTT, double probTG, double probGA, double probGC, double probGT, double probGG)
 {
     int dnaLength = getGaussianNum(variance, meanDnaLength);
-    //cout << "dnaLength: " << dnaLength << endl;
     string dnaString = "";
     int DnaLengthLeftToGenerate = 0;
 
@@ -554,7 +676,44 @@ string getDnaString(double variance, double meanDnaLength, double probA, double 
         }
 
     } //while
-    //cout << "dnaString: " << dnaString << endl;
 
     return dnaString;
 } //getDnaString()
+
+
+ string printMyInfo()
+ {
+     string outputString = "";
+     outputString.append("1.) Identifying Information\n");
+     outputString.append("a. Lucas Torti\n");
+     outputString.append("b. Student ID: 2351555\n");
+     outputString.append("c. Chapman email: torti@chapman.edu\n");
+     outputString.append("d. CPSC 350-01\n");
+     outputString.append("e. Assignment Number: 1\n");
+     outputString.append("\n");
+     outputString.append("2.) List of source files submitted\n");
+     outputString.append("a. main.cpp\n");
+     outputString.append("\n");
+     outputString.append("3.) Description of any know compile/runtime errors, or bugs\n");
+     outputString.append("a. None known\n");
+     outputString.append("\n");
+     outputString.append("4.) References used to complete the assignment\n");
+     outputString.append("a. In class resources\n");
+     outputString.append("b. Chris Chang\n");
+     outputString.append("c. Wyatt Miller\n");
+     outputString.append("d. Yuki Chen\n");
+     outputString.append("e. https://www.geeksforgeeks.org/command-line-arguments-in-c-cpp/\n");
+     outputString.append("f. http://www.cplusplus.com/doc/tutorial/files/\n");
+     outputString.append("g. https://stackoverflow.com/questions/46719183/c-using-ifstream-to-read-file\n");
+     outputString.append("h. https://stackoverflow.com/questions/2310939/remove-last-character-from-c-string\n");
+     outputString.append("i. https://stackoverflow.com/questions/2649717/c-function-for-picking-from-a-list-where-each-element-has-a-distinct-probabili\n");
+     outputString.append("j. https://stackoverflow.com/questions/7748071/same-random-numbers-every-time-i-run-the-program\n");
+     outputString.append("k. https://stackoverflow.com/questions/1727881/how-to-use-the-pi-constant-in-c\n");
+     outputString.append("l. http://www.cplusplus.com/reference/cmath/log/\n");
+     outputString.append("\n");
+
+
+
+
+    return outputString;
+}// printMyInfo
