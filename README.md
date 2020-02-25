@@ -26,5 +26,5 @@ k. https://stackoverflow.com/questions/1727881/how-to-use-the-pi-constant-in-c
 l. http://www.cplusplus.com/reference/cmath/log/
 
 5.) Instructions for running the assignment
-1. Compile the source files
-2. Run the source files
+1. Compile main.cpp
+2. Run
