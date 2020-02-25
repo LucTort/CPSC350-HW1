@@ -26,5 +26,5 @@ k. https://stackoverflow.com/questions/1727881/how-to-use-the-pi-constant-in-c
 l. http://www.cplusplus.com/reference/cmath/log/
 
 5.) Instructions for running the assignment
-1. Compile main.cpp
-2. Run with single command line prarameter of file to read in
+1. Run make file
+2. Run DNA.exe

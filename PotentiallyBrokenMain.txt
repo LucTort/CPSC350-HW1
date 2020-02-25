@@ -72,42 +72,6 @@ int main(int argc, char **argv)
     string userInput = "";  //sets up user inut variable
 
     //Arrays are for wimps. Real coders use copy & paste
-    
-
-    string line = "";          
-
-
-
-     // __  ___      _          ____                                      
-    // /  |/  /___ _(_)___     / __ \_________  ____ __________ _____ ___     //
-   // / /|_/ / __ `/ / __ \   / /_/ / ___/ __ \/ __ `/ ___/ __ `/ __ `__ \   //
-  // / /  / / /_/ / / / / /  / ____/ /  / /_/ / /_/ / /  / /_/ / / / / / /  //
- // /_/  /_/\__,_/_/_/ /_/  /_/   /_/   \____/\__, /_/   \__,_/_/ /_/ /_/  //
-//                                          /____/                        //
-
-
-    //Open files for later use in program    
-    ifstream inputFile; //takes file form command line
-    ofstream outputFile(OUTPUT_FILE); //Creates output file
-    
-
-    //while is used to run program again and again
-    while (userInput != "quit")//(!(tolower(userInput) == "quit"))
-    {
-
-        //reset variables from previous use
-
-     stringOfLetters = "";
-     stringOfBigrams = "";
-
-     DNAlinesInDoc = 0;
-     DNAstringLength = 0;
-     varianceNumerator = 0;
-     meanDnaPerLine = 0;
-     variance = 0;
-
-     wasCharInLine = false;
-
     unsigned int numAA = 0;
     unsigned int numAC = 0;
     unsigned int numAT = 0;
@@ -155,6 +119,87 @@ int main(int argc, char **argv)
     unsigned int totalDNA = 0;
     unsigned int totalBigrams = 0;
 
+    string line = "";          
+
+
+
+     // __  ___      _          ____                                      
+    // /  |/  /___ _(_)___     / __ \_________  ____ __________ _____ ___     //
+   // / /|_/ / __ `/ / __ \   / /_/ / ___/ __ \/ __ `/ ___/ __ `/ __ `__ \   //
+  // / /  / / /_/ / / / / /  / ____/ /  / /_/ / /_/ / /  / /_/ / / / / / /  //
+ // /_/  /_/\__,_/_/_/ /_/  /_/   /_/   \____/\__, /_/   \__,_/_/ /_/ /_/  //
+//                                          /____/                        //
+
+
+    //Open files for later use in program    
+    ifstream inputFile; //takes file form command line
+    ofstream outputFile(OUTPUT_FILE); //Creates output file
+    
+
+    //while is used to run program again and again
+    while (userInput != "quit")//(!(tolower(userInput) == "quit"))
+    {
+
+        //reset variables from previous use
+
+     stringOfLetters = "";
+     stringOfBigrams = "";
+
+     DNAlinesInDoc = 0;
+     DNAstringLength = 0;
+     varianceNumerator = 0;
+     meanDnaPerLine = 0;
+     variance = 0;
+
+     wasCharInLine = false;
+
+      numAA = 0;
+      numAC = 0;
+      numAT = 0;
+      numAG = 0;
+      numCA = 0;
+      numCC = 0;
+     numCT = 0;
+     numCG = 0;
+     numTA = 0;
+     numTC = 0;
+     numTT = 0;
+     numTG = 0;
+     numGA = 0;
+     numGC = 0;
+     numGT = 0;
+     numGG = 0;
+
+      numA = 0;
+      numC = 0;
+      numT = 0;
+      numG = 0;
+
+     probAA = 0;
+     probAC = 0;
+     probAT = 0;
+     probAG = 0;
+     probCA = 0;
+     probCC = 0;
+     probCT = 0;
+     probCG = 0;
+     probTA = 0;
+     probTC = 0;
+     probTT = 0;
+     probTG = 0;
+     probGA = 0;
+     probGC = 0;
+     probGT = 0;
+     probGG = 0;
+
+     probA = 0;
+     probC = 0;
+     probT = 0;
+     probG = 0;
+
+    totalDNA = 0;
+    totalBigrams = 0;
+
 
 
 
@@ -192,7 +237,7 @@ int main(int argc, char **argv)
             else
             {
                 bigram = "";
-                //bigram = "";
+                bigram = "";
                 if (currentChar == '\n' && wasCharInLine == true) //This makes it so the program only counts lines with A,C, T, or G in them
                 {
                     wasCharInLine = false;
@@ -206,11 +251,9 @@ int main(int argc, char **argv)
                 bigram = "";
             }
 
-           // previousChar = currentChar;
+            previousChar = currentChar;
 
         } //while
-
-        if (wasCharInLine) {DNAlinesInDoc++;}
 
         //closes and opens file to reset position
         inputFile.close();
@@ -233,14 +276,11 @@ int main(int argc, char **argv)
 
             else if (currentChar == '\n')
             {
-                double subtraction = DNAstringLength - meanDnaPerLine;
-                varianceNumerator += subtraction * subtraction;
-                // varianceNumerator += pow((DNAstringLength - meanDnaPerLine), 2);
+                varianceNumerator += pow((DNAstringLength - meanDnaPerLine), 2);
 
                 // cout << "Variance calculation" << endl;
 
-                // cout << "power: " << pow((DNAstringLength - meanDnaPerLine), 2) << endl;
-                cout << "subtraction: " << subtraction << endl;
+                // cout << pow((DNAstringLength - meanDnaPerLine), 2) << endl;
 
                 DNAstringLength = 0;
             } //else  if
@@ -341,69 +381,63 @@ int main(int argc, char **argv)
         probGC = (numGC / ((double)totalBigrams));
         probGT = (numGT / ((double)totalBigrams));
         probGG = (numGG / ((double)totalBigrams));
-        
-
-                if(timesRun == 0)
-        {
-            outputFile << printMyInfo();
-        }
 
 
         //outputs calculated data
 
 
-        outputFile << "Number of A: " << numA << endl;
-        outputFile << "Number of C: " << numC << endl;
-        outputFile << "Number of T: " << numT << endl;
-        outputFile << "Number of G: " << numG << endl
+        cout << "Number of A: " << numA << endl;
+        cout << "Number of C: " << numC << endl;
+        cout << "Number of T: " << numT << endl;
+        cout << "Number of G: " << numG << endl
             << endl;
 
-        outputFile << "AA combinations: " << numAA << endl;
-        outputFile << "AC combinations: " << numAC << endl;
-        outputFile << "AT combinations: " << numAT << endl;
-        outputFile << "AG combinations: " << numAG << endl;
-        outputFile << "CA combinations: " << numCA << endl;
-        outputFile << "CC combinations: " << numCC << endl;
-        outputFile << "CT combinations: " << numCT << endl;
-        outputFile << "CG combinations: " << numCG << endl;
-        outputFile << "TA combinations: " << numTA << endl;
-        outputFile << "TC combinations: " << numTC << endl;
-        outputFile << "TT combinations: " << numTT << endl;
-        outputFile << "TG combinations: " << numTG << endl;
-        outputFile << "GA combinations: " << numGA << endl;
-        outputFile << "GC combinations: " << numGC << endl;
-        outputFile << "GT combinations: " << numGT << endl;
-        outputFile << "GG combinations: " << numGG << endl
+        cout << "AA combinations: " << numAA << endl;
+        cout << "AC combinations: " << numAC << endl;
+        cout << "AT combinations: " << numAT << endl;
+        cout << "AG combinations: " << numAG << endl;
+        cout << "CA combinations: " << numCA << endl;
+        cout << "CC combinations: " << numCC << endl;
+        cout << "CT combinations: " << numCT << endl;
+        cout << "CG combinations: " << numCG << endl;
+        cout << "TA combinations: " << numTA << endl;
+        cout << "TC combinations: " << numTC << endl;
+        cout << "TT combinations: " << numTT << endl;
+        cout << "TG combinations: " << numTG << endl;
+        cout << "GA combinations: " << numGA << endl;
+        cout << "GC combinations: " << numGC << endl;
+        cout << "GT combinations: " << numGT << endl;
+        cout << "GG combinations: " << numGG << endl
             << endl;
 
-        outputFile << "Probability of A: " << probA << endl;
-        outputFile << "Probability of C: " << probC << endl;
-        outputFile << "Probability of T: " << probT << endl;
-        outputFile << "Probability of G: " << probG << endl
+        cout << "Probability of A: " << probA << endl;
+        cout << "Probability of C: " << probC << endl;
+        cout << "Probability of T: " << probT << endl;
+        cout << "Probability of G: " << probG << endl
             << endl;
 
-        outputFile << "Probability of AA: " << probAA << endl;
-        outputFile << "Probability of AC: " << probAC << endl;
-        outputFile << "Probability of AT: " << probAT << endl;
-        outputFile << "Probability of AG: " << probAG << endl;
-        outputFile << "Probability of CA: " << probCA << endl;
-        outputFile << "Probability of CC: " << probCC << endl;
-        outputFile << "Probability of CT: " << probCT << endl;
-        outputFile << "Probability of CG: " << probCG << endl;
-        outputFile << "Probability of TA: " << probTA << endl;
-        outputFile << "Probability of TC: " << probTC << endl;
-        outputFile << "Probability of TT: " << probTT << endl;
-        outputFile << "Probability of TG: " << probTG << endl;
-        outputFile << "Probability of GA: " << probGA << endl;
-        outputFile << "Probability of GC: " << probGC << endl;
-        outputFile << "Probability of GT: " << probGT << endl;
-        outputFile << "Probability of GG: " << probGG << endl
+        cout << "Probability of AA: " << probAA << endl;
+        cout << "Probability of AC: " << probAC << endl;
+        cout << "Probability of AT: " << probAT << endl;
+        cout << "Probability of AG: " << probAG << endl;
+        cout << "Probability of CA: " << probCA << endl;
+        cout << "Probability of CC: " << probCC << endl;
+        cout << "Probability of CT: " << probCT << endl;
+        cout << "Probability of CG: " << probCG << endl;
+        cout << "Probability of TA: " << probTA << endl;
+        cout << "Probability of TC: " << probTC << endl;
+        cout << "Probability of TT: " << probTT << endl;
+        cout << "Probability of TG: " << probTG << endl;
+        cout << "Probability of GA: " << probGA << endl;
+        cout << "Probability of GC: " << probGC << endl;
+        cout << "Probability of GT: " << probGT << endl;
+        cout << "Probability of GG: " << probGG << endl
             << endl;
 
-        outputFile << endl << "Sum of DNA length: " << stringOfLetters.length() << endl;
-        outputFile << "Lines containing DNA: " << DNAlinesInDoc << endl;
-        outputFile << "Mean DNA per line: " << meanDnaPerLine << endl;
-        outputFile << "Variance: " << variance << endl << endl;
+        cout << endl << "Sum of DNA length: " << stringOfLetters.length() << endl;
+        cout << "Lines containing DNA: " << DNAlinesInDoc << endl;
+        cout << "Mean DNA per line: " << meanDnaPerLine << endl;
+        cout << "Variance: " << variance << endl << endl;
 
 
 
@@ -411,7 +445,10 @@ int main(int argc, char **argv)
         //Print to file
 
 
-
+        if(timesRun == 0)
+        {
+            outputFile << printMyInfo();
+        }
         //cout << "Random value: " << selectedOutput << endl;
         cout << "Writing to file..." << endl;
         for (int i = 0; i < NUM_LINES_TO_PRINT; ++i)
