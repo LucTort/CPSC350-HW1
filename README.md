@@ -27,4 +27,4 @@ l. http://www.cplusplus.com/reference/cmath/log/
 
 5.) Instructions for running the assignment
 1. Compile main.cpp
-2. Run
+2. Run with single command line prarameter of file to read in
